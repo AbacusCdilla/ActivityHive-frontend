@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import LessonCart from '../components/LessonCart.vue';
 import CheckoutPage from '../components/CheckoutPage.vue';
 import Lessons from '../components/LessonList.vue';
@@ -11,7 +11,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // ✅ Use Hash History for GitHub Pages
+  history: createWebHistory(),
   routes,
 });
 
