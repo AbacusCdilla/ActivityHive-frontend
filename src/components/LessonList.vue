@@ -107,7 +107,9 @@ export default {
       this.apiError = "";
 
       try {
-        const response = await fetch("https://activityhive-backend-2.onrender.com/lessons");
+        const response = await fetch(
+          "https://activityhive-backend-2.onrender.com/lessons"
+        );
         if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
         const data = await response.json();
 
@@ -141,28 +143,40 @@ export default {
         this.alertMessage = "Not enough space!";
       }
       setTimeout(() => (this.alertMessage = ""), 3000);
-    }
+    },
+    toggleSortOrder() {
+      this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
+    },
   },
   computed: {
     sortedLessons() {
-      return [...this.lessons]
-        .sort((a, b) => {
-          let aValue = a[this.sortKey], bValue = b[this.sortKey];
-          return this.sortOrder === "asc"
-            ? aValue.localeCompare ? aValue.localeCompare(bValue) : aValue - bValue
-            : bValue.localeCompare ? bValue.localeCompare(aValue) : bValue - aValue;
-        })
-        .filter((lesson) =>
-          [lesson.title, lesson.subject, lesson.location].some((field) =>
-            field.toLowerCase().includes(this.searchQuery.toLowerCase())
-          )
-        );
+      let sorted = [...this.lessons];
+      if (this.sortKey) {
+        sorted.sort((a, b) => {
+          let aValue = a[this.sortKey];
+          let bValue = b[this.sortKey];
+
+          if (typeof aValue === "string") {
+            return this.sortOrder === "asc"
+              ? aValue.localeCompare(bValue)
+              : bValue.localeCompare(aValue);
+          } else {
+            return this.sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+          }
+        });
+      }
+      return sorted.filter(
+        (lesson) =>
+          lesson.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          lesson.subject
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          lesson.location.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     },
   },
 };
-
 </script>
-
 
 <style scoped>
 .lesson-list {
