@@ -37,13 +37,14 @@
 </template>
 
 <script>
+// LessonCart.vue
 export default {
   name: "LessonCart",
   props: {
     cart: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     total() {
@@ -51,42 +52,41 @@ export default {
     },
     totalQuantity() {
       return this.cart.reduce((sum, item) => sum + item.quantity, 0);
-    }
+    },
   },
   methods: {
     increaseQuantity(item) {
       if (item.space > 0) {
         item.quantity++;
         item.space--;
+        this.$emit("update-cart", this.cart);
       }
     },
     decreaseQuantity(item) {
       if (item.quantity > 1) {
         item.quantity--;
         item.space++;
+        this.$emit("update-cart", this.cart);
       } else {
         this.removeItem(item);
       }
     },
     removeItem(item) {
-      const updatedCart = this.cart.filter(i => i._id !== item._id);
-      this.$emit('update-cart', updatedCart);
-
-      // Increase space back in LessonList
-      const lessonInList = this.$parent.lessons.find(l => l._id === item._id);
-      if (lessonInList) {
-        lessonInList.space += item.quantity;
-      }
+      const updatedCart = this.cart.filter((i) => i._id !== item._id);
+      this.$emit("update-cart", updatedCart);
+      this.$emit("update-lesson-space", { _id: item._id, quantity: item.quantity });
     },
     goToCheckout() {
-      this.$router.push('/checkout'); 
+      this.$router.push("/checkout");
     },
     goBackToLessons() {
-      this.$router.push('/lessons'); 
-    }
-  }
+      this.$router.push("/lessons");
+    },
+  },
 };
+
 </script>
+
 
 <style scoped>
 /* Main Cart Section */

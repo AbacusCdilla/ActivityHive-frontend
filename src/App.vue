@@ -11,40 +11,40 @@
 </template>
 
 <script>
+// App.vue
 export default {
   name: "App",
   data() {
     return {
-      cart: [] // Cart items
+      cart: []
     };
   },
   computed: {
-    // Total items in cart for cart button
     totalItems() {
-      return this.cart.reduce((sum, item) => sum + (item.quantity || 1), 0); // Ensure quantity is counted correctly
+      return this.cart.reduce((sum, item) => sum + item.quantity, 0);
     }
   },
   methods: {
-    // Add item to cart
     addToCart(lesson) {
       const existing = this.cart.find((item) => item._id === lesson._id);
       if (existing) {
-        this.$set(existing, 'quantity', existing.quantity + 1); // Ensure Vue detects change
+        existing.quantity += lesson.quantity; // Correctly add selected quantity
       } else {
-        this.cart.push({ ...lesson, quantity: 1 });
+        this.cart.push({ ...lesson });
       }
+      this.cart = [...this.cart]; // Force reactivity
     },
-    // Update cart (from CartPage)
     updateCart(updatedCart) {
-      this.cart = [...updatedCart]; // Ensure reactivity
+      this.cart = [...updatedCart];
     },
-    // Handle order placed successfully
     handleOrderPlaced() {
-      this.cart = []; // Empty cart
-      this.$router.push('/'); // Redirect to home page
+      this.cart = [];
+      this.$router.push('/');
     }
   }
 };
+
+
 </script>
 
 <style>
