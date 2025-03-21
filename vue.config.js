@@ -1,5 +1,6 @@
-module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/ActivityHive-frontend/' // <-- Yeh repo ka name hai, isko sahi likho!
-    : '/'
-};
+const { defineConfig } = require('@vue/cli-service');
+
+module.exports = defineConfig({
+  publicPath: '/ActivityHive-frontend/', // Set the public path
+  transpileDependencies: true,
+});
