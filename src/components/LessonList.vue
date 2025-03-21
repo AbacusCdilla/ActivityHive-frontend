@@ -15,12 +15,14 @@
         placeholder="Search lessons..."
         class="search-bar"
       />
-      <div class="sort-buttons">
-        <button @click="setSort('subject')">Sort by Subject</button>
-        <button @click="setSort('location')">Sort by Location</button>
-        <button @click="setSort('price')">Sort by Price</button>
-        <button @click="setSort('spaces')">Sort by Spaces</button>
-        <button @click="toggleSortOrder">
+      <div class="sort-controls">
+        <select v-model="sortKey" class="sort-select">
+          <option value="subject">Subject</option>
+          <option value="location">Location</option>
+          <option value="price">Price</option>
+          <option value="spaces">Spaces</option>
+        </select>
+        <button @click="toggleSortOrder" class="sort-order-btn">
           {{ sortOrder === 'asc' ? "⬆ Ascending" : "⬇ Descending" }}
         </button>
       </div>
@@ -105,13 +107,10 @@ export default {
       this.apiError = "";
 
       try {
-        const response = await fetch(
-          "https://activityhive-backend-2.onrender.com/lessons"
-        );
+        const response = await fetch('https://activityhive-backend-2.onrender.com/lessons');
 
         if (!response.ok) {
           throw new Error(`HTTP Error: ${response.status}`);
-
         }
 
         const data = await response.json();
@@ -147,9 +146,6 @@ export default {
         this.alertMessage = "No spaces left!";
       }
       setTimeout(() => (this.alertMessage = ""), 3000);
-    },
-    setSort(key) {
-      this.sortKey = key;
     },
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
@@ -187,15 +183,48 @@ export default {
 };
 </script>
 
+
 <style scoped>
-/* ✅ Sorting Buttons Styling */
-.sort-buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+.lesson-list {
+  max-width: 1500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.sort-buttons button {
+.search-sort-wrapper {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  padding: 8px 12px;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.sort-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sort-select {
+  padding: 8px 12px;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  background-color: white;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.sort-order-btn {
   padding: 8px 12px;
   border: 1px solid #007bff;
   background-color: white;
@@ -205,18 +234,11 @@ export default {
   transition: 0.3s;
 }
 
-.sort-buttons button:hover {
+.sort-order-btn:hover {
   background-color: #007bff;
   color: white;
 }
 
-.sort-buttons button:focus {
-  outline: none;
-  background-color: #0056b3;
-  color: white;
-}
-
-/* ✅ Error Message */
 .error-message {
   color: red;
   font-size: 16px;
@@ -257,20 +279,12 @@ export default {
   transform: scale(1.05);
 }
 
-.lesson-list {
-  max-width: 1500px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 th,
@@ -284,5 +298,9 @@ th {
   background-color: #007bff;
   color: white;
   font-weight: bold;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
 }
 </style>
