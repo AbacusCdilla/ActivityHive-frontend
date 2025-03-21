@@ -1,6 +1,6 @@
 const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
-  publicPath: '/ActivityHive-frontend/', // Set the public path
+  publicPath: '/ActivityHive-frontend/', // Must match your GitHub Pages subpath
   transpileDependencies: true,
 });
